@@ -20,7 +20,7 @@
         <p>Now that your app has been created, you'll want to start building out features and components. Check out some of the resources below for next steps.</p>
       </ion-card-content>
     </ion-card>
-    <ion-list lines="none">
+    <!-- <ion-list lines="none">
       <ion-list-header>
         <ion-label>Resources</ion-label>
       </ion-list-header>
@@ -39,6 +39,15 @@
       <ion-item href="https://ionicframework.com/docs/theming/basics">
         <ion-icon slot="start" color="medium" name="color-fill"></ion-icon>
         <ion-label>Theme Your App</ion-label>
+      </ion-item>
+    </ion-list> -->
+    <ion-list lines="none">
+      <ion-list-header>
+        <ion-label>Categorías</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let item of items">
+        <ion-icon [name]="item.icon" slot="start"></ion-icon>
+        <ion-label>{{item.title}}</ion-label>
       </ion-item>
     </ion-list>
 </ion-content>

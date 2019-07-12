@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AppsService } from '../api/apps.service';
+import { Storage } from '@ionic/storage';
+import { inArray } from 'src/commons/Utils';
 
 @Component({
   selector: 'app-list',
@@ -20,20 +23,87 @@ export class ListPage implements OnInit {
     'build'
   ];
   public items: Array<{ title: string; note: string; icon: string }> = [];
-  constructor() {
-    for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
+  
+  constructor(public api: AppsService, public storage: Storage) {
+    
   }
 
   ngOnInit() {
+
+    this.listar();
+
   }
   // add back when alpha.4 is out
   // navigate(item) {
   //   this.router.navigate(['/list', JSON.stringify(item)]);
   // }
+
+  listar(){
+    // for (let i = 1; i < 11; i++) {
+    //   this.items.push({
+    //     title: 'Item ' + i,
+    //     note: 'This is item #' + i,
+    //     icon: this.icons[Math.floor(Math.random() * this.icons.length)]
+    //   });
+    // }
+
+
+    this.storage.get('appsData')
+    .then((data:any) => {
+
+      this.items = [];
+      let itemsadded = [];
+
+      if(data){
+        
+        data['feed']['entry'].forEach(app => {
+          //console.log("info",app);
+          if (!inArray(app.category.attributes.label, itemsadded)) {
+            this.items.push({
+              title: app.category.attributes.label,
+              note: app.category.attributes.term,
+              icon: this.icons[Math.floor(Math.random() * this.icons.length)]
+            });
+            itemsadded.push(app.category.attributes.label);
+          }
+          
+        });
+
+      }else{
+        
+        this.api.getinfoApps()
+          .then(resp => {        
+
+            console.log("info",resp);
+            this.storage.set('appsData', resp);
+
+            resp['feed']['entry'].forEach(app => {
+              
+              if (!inArray(app.category.attributes.label, itemsadded)) {
+                this.items.push({
+                  title: app.category.attributes.label,
+                  note: app.category.attributes.term,
+                  icon: this.icons[Math.floor(Math.random() * this.icons.length)]
+                });
+                itemsadded.push(app.category.attributes.label);
+              }
+
+            });
+
+          })
+          .catch(err => {
+
+          });
+
+      }
+
+      
+    });
+
+  }
+
+  selectIcon(){
+
+  }
+
 }
