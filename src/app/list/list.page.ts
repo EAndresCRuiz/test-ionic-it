@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppsService } from '../api/apps.service';
 import { Storage } from '@ionic/storage';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -10,27 +10,25 @@ import { Router, NavigationExtras } from '@angular/router';
 })
 export class ListPage implements OnInit {
   private selectedItem: any;
-  private icons = [
-    'flask',
-    'wifi',
-    'beer',
-    'football',
-    'basketball',
-    'paper-plane',
-    'american-football',
-    'boat',
-    'bluetooth',
-    'build'
-  ];
   public applications = [];
   
-  constructor(public api: AppsService, public storage: Storage, public router: Router) {
-    
+  constructor(public api: AppsService, public storage: Storage, public router: Router, 
+    private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        console.log("if");
+        this.applications = this.router.getCurrentNavigation().extras.state.selectedApps;
+        console.log("if", this.applications);
+      }else{
+        console.log("else");
+        this.listar();
+      }
+    });
   }
 
   ngOnInit() {
 
-    this.listar();
+    //this.listar();
 
   }
   // add back when alpha.4 is out
@@ -52,7 +50,6 @@ export class ListPage implements OnInit {
       .then((data:any) => {
 
         this.applications = [];
-        let itemsadded = [];
 
         if(data){
           
@@ -93,7 +90,8 @@ export class ListPage implements OnInit {
 
     let navigationExtras: NavigationExtras = {
       state: {
-        selectedApp: selectedApp
+        selectedApp: selectedApp,
+        listApps: this.applications
       }
     };
 

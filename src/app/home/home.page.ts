@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AppsService } from '../api/apps.service';
 import { Storage } from '@ionic/storage';
 import { inArray } from 'src/commons/Utils';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -24,8 +25,9 @@ export class HomePage {
     'build'
   ];
   public items: Array<{id: string, title: string; note: string; icon: string }> = [];
+  public applications = [];
 
-  constructor(public api: AppsService, public storage: Storage) {
+  constructor(public api: AppsService, public storage: Storage, public router: Router) {
     
   }
 
@@ -45,6 +47,8 @@ export class HomePage {
 
       if(data){
         
+        this.applications = data['feed']['entry'];
+
         data['feed']['entry'].forEach(app => {
           //console.log("info",app);
           if (!inArray(app.category.attributes.label, itemsadded)) {
@@ -52,7 +56,7 @@ export class HomePage {
               id: app.category.attributes['im:id'],
               title: app.category.attributes.label,
               note: app.category.attributes.term,
-              icon: this.icons[Math.floor(Math.random() * this.icons.length)]
+              icon: this.selectIcon(app.category.attributes.label)
             });
             itemsadded.push(app.category.attributes.label);
           }
@@ -66,6 +70,7 @@ export class HomePage {
 
             console.log("info",resp);
             this.storage.set('appsData', resp);
+            this.applications = resp['feed']['entry'];
 
             resp['feed']['entry'].forEach(app => {
               
@@ -74,7 +79,7 @@ export class HomePage {
                   id: app.category.attributes['im:id'],
                   title: app.category.attributes.label,
                   note: app.category.attributes.term,
-                  icon: this.icons[Math.floor(Math.random() * this.icons.length)]
+                  icon: this.selectIcon(app.category.attributes.label)
                 });
                 itemsadded.push(app.category.attributes.label);
               }
@@ -93,9 +98,45 @@ export class HomePage {
 
   }
 
-  filterApps(id){
-    console.log("id", id);
+  selectIcon(name: string){
+    switch (name) {
+      case 'Social Networking':
+        return "people";
+      case 'Games':
+        return "football";        
+      case 'Photo & Video':
+        return "camera";        
+      case 'Productivity':
+        return "calculator";        
+      case 'Navigation':
+        return "map";        
+      case 'Finance':
+        return "briefcase";        
+      case 'Food & Drink':
+        return "restaurant";        
+      case 'Shopping':
+        return "pricetags";        
+    }
+  }
 
+  filterApps(id){
+    
+    let selectedApps = [];
+
+    this.applications.forEach(app => {
+      if (app.category.attributes['im:id']==id) {
+        console.log("encontrado",app);
+        selectedApps.push( app );
+      }
+    });
+
+    let navigationExtras: NavigationExtras = {
+      state: {
+        selectedApps: selectedApps
+      }
+    };
+
+    this.router.navigate(['list'], navigationExtras);
   }
 
 }

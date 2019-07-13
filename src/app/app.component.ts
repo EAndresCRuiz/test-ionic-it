@@ -17,14 +17,14 @@ export class AppComponent {
 
   public appPages = [
     {
-      title: 'Home',
+      title: 'Categorias',
       url: '/home',
-      icon: 'home'
+      icon: 'pricetag'
     },
     {
-      title: 'List',
+      title: 'Aplicaciones',
       url: '/list',
-      icon: 'list'
+      icon: 'list-box'
     }
   ];
 

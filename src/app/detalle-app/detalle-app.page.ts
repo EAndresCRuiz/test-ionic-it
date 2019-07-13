@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-app',
@@ -10,11 +10,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class DetalleAppPage implements OnInit {
 
   public data: any;
+  public dataParent: any;
 
   constructor(private navCtrl: NavController, private route: ActivatedRoute, private router: Router) {
     this.route.queryParams.subscribe(params => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.data = this.router.getCurrentNavigation().extras.state.selectedApp;
+        this.dataParent = this.router.getCurrentNavigation().extras.state.listApps;
       }
     });
   }
@@ -23,7 +25,22 @@ export class DetalleAppPage implements OnInit {
   }
 
   goBack(){
-    this.navCtrl.back();
+
+    if (this.dataParent) {
+      let selectedApps = [];
+
+      let navigationExtras: NavigationExtras = {
+        state: {
+          selectedApps: this.dataParent
+        }
+      };
+      console.log("todos filters ", selectedApps);
+
+      this.router.navigate(['list'], navigationExtras);
+    }else{
+      this.navCtrl.back();
+    }
+    
   }
 
 }
