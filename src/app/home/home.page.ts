@@ -23,7 +23,7 @@ export class HomePage {
     'bluetooth',
     'build'
   ];
-  public items: Array<{ title: string; note: string; icon: string }> = [];
+  public items: Array<{id: string, title: string; note: string; icon: string }> = [];
 
   constructor(public api: AppsService, public storage: Storage) {
     
@@ -49,6 +49,7 @@ export class HomePage {
           //console.log("info",app);
           if (!inArray(app.category.attributes.label, itemsadded)) {
             this.items.push({
+              id: app.category.attributes['im:id'],
               title: app.category.attributes.label,
               note: app.category.attributes.term,
               icon: this.icons[Math.floor(Math.random() * this.icons.length)]
@@ -70,6 +71,7 @@ export class HomePage {
               
               if (!inArray(app.category.attributes.label, itemsadded)) {
                 this.items.push({
+                  id: app.category.attributes['im:id'],
                   title: app.category.attributes.label,
                   note: app.category.attributes.term,
                   icon: this.icons[Math.floor(Math.random() * this.icons.length)]
@@ -88,6 +90,11 @@ export class HomePage {
 
       
     });
+
+  }
+
+  filterApps(id){
+    console.log("id", id);
 
   }
 

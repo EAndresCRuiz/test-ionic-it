@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <!-- <ion-list>
     <ion-item *ngFor="let item of items">
       <ion-icon [name]="item.icon" slot="start"></ion-icon>
       {{item.title}}
@@ -18,151 +18,27 @@
         {{item.note}}
       </div>
     </ion-item>
-  </ion-list>
+  </ion-list> -->
 
-  <div class="scroll-content" style="margin-top: 56px;">
+  <div class="scroll-content" style="/*margin-top: 56px;*/">
 
     <ion-grid class="is-grid grid">
   
       <ion-row class="row">
   
-        <ion-col class="is-tile is-tile-bordered col" col-4="" text-center="">
-  
-          <div>
-  
-            <img src="assets/imgs/gmail.png">
-  
-            <p class="is-tile-caption">
-  
-              Gmail
-  
-            </p>
-  
-          </div>
-  
-        </ion-col>
-  
-        <ion-col class="is-tile is-tile-bordered col" col-4="" text-center="">
-  
-          <div>
-  
-            <img src="assets/imgs/yahoo.png">
-  
-            <p class="is-tile-caption">
-  
-              Yahoo
-  
-            </p>
-  
-          </div>
-  
-        </ion-col>
-  
-        <ion-col class="is-tile is-tile-bordered col" col-4="" text-center="">
-  
-          <div>
-  
-            <img src="assets/imgs/mail-ru.png">
-  
-            <p class="is-tile-caption">
-  
-              Mail.ru
-  
-            </p>
-  
-          </div>
-  
-        </ion-col>
-  
-      </ion-row>
-  
-  
-  
-      <ion-row class="row">
-  
-        <ion-col class="is-tile is-tile-bordered col" col-4="" text-center="">
-  
-          <div>
-  
-            <img src="assets/imgs/yandex.png">
-  
-            <p class="is-tile-caption">
-  
-              Yandex
-  
-            </p>
-  
-          </div>
-  
-        </ion-col>
-  
-        <ion-col class="is-tile is-tile-bordered col" col-4="" text-center="">
-  
-          <div>
-  
-            <img src="assets/imgs/mail.png">
-  
-            <p class="is-tile-caption">
-  
-              IMAP
-  
-            </p>
-  
-          </div>
-  
-        </ion-col>
-  
-        <ion-col class="is-tile is-tile-bordered col" col-4="" text-center="">
-  
-          <div>
-  
-            <img src="assets/imgs/outlook.png">
-  
-            <p class="is-tile-caption">
-  
-              Outlook
-  
-            </p>
-  
-          </div>
-  
-        </ion-col>
-  
-      </ion-row>
-  
-  
-  
-      <ion-row class="row">
-  
-        <ion-col class="is-tile is-tile-bordered col" col-4="" text-center="">
-  
-          <div>
-  
-            <img src="assets/imgs/aol.png">
-  
-            <p class="is-tile-caption">
-  
-              Aol Mail
-  
-            </p>
-  
-          </div>
-  
-        </ion-col>
-  
-        <ion-col class="is-tile is-tile-bordered col" col-4="" text-center="">
-  
-          <div>
-  
-            <img src="assets/imgs/icloud.png">
-  
-            <p class="is-tile-caption">
-  
-              iCloud Mail
-  
-            </p>
-  
-          </div>
+        <ion-col class="is-tile is-tile-bordered col" col-4
+          *ngFor="let app of applications" no-padding >
+  
+          <ion-card (click)="selectApp(app.id)" >
+
+            <ion-card-header>
+              {{app['im:name'].label}}
+            </ion-card-header>
+            <ion-card-content class="fixline">
+              <img [src]="app['im:image'][0].label">
+            </ion-card-content>
+
+          </ion-card>
   
         </ion-col>
   

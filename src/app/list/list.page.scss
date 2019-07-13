@@ -1,1 +1,23 @@
+page-list{
+    .fixline{
+        height: 60px;
+        margin-bottom: 7px;
+    }
 
+    .grid {
+        padding: 5px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+      }
+
+}

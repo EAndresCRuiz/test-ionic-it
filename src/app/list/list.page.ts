@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppsService } from '../api/apps.service';
 import { Storage } from '@ionic/storage';
-import { inArray } from 'src/commons/Utils';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -22,9 +22,9 @@ export class ListPage implements OnInit {
     'bluetooth',
     'build'
   ];
-  public items: Array<{ title: string; note: string; icon: string }> = [];
+  public applications = [];
   
-  constructor(public api: AppsService, public storage: Storage) {
+  constructor(public api: AppsService, public storage: Storage, public router: Router) {
     
   }
 
@@ -49,61 +49,57 @@ export class ListPage implements OnInit {
 
 
     this.storage.get('appsData')
-    .then((data:any) => {
+      .then((data:any) => {
 
-      this.items = [];
-      let itemsadded = [];
+        this.applications = [];
+        let itemsadded = [];
 
-      if(data){
-        
-        data['feed']['entry'].forEach(app => {
-          //console.log("info",app);
-          if (!inArray(app.category.attributes.label, itemsadded)) {
-            this.items.push({
-              title: app.category.attributes.label,
-              note: app.category.attributes.term,
-              icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-            });
-            itemsadded.push(app.category.attributes.label);
-          }
+        if(data){
           
-        });
+          this.applications = data['feed']['entry'];
 
-      }else{
-        
-        this.api.getinfoApps()
-          .then(resp => {        
+        }else{
+          
+          this.api.getinfoApps()
+            .then(resp => {        
 
-            console.log("info",resp);
-            this.storage.set('appsData', resp);
+              console.log("info",resp);
+              this.storage.set('appsData', resp);
 
-            resp['feed']['entry'].forEach(app => {
-              
-              if (!inArray(app.category.attributes.label, itemsadded)) {
-                this.items.push({
-                  title: app.category.attributes.label,
-                  note: app.category.attributes.term,
-                  icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-                });
-                itemsadded.push(app.category.attributes.label);
-              }
+              this.applications = data['feed']['entry'];
+
+            })
+            .catch(err => {
 
             });
 
-          })
-          .catch(err => {
+        }
 
-          });
-
-      }
-
-      
-    });
+        
+      });
 
   }
 
-  selectIcon(){
+  selectApp(id){
 
+    let selectedApp = {};
+
+    this.applications.forEach(app => {
+      if (app.id.attributes['im:id']==id.attributes['im:id']) {
+        console.log("encontrado",app);
+        selectedApp = app;
+      }
+    });
+
+    let navigationExtras: NavigationExtras = {
+      state: {
+        selectedApp: selectedApp
+      }
+    };
+
+    this.router.navigate(['detalle-app'], navigationExtras);
+    // this.navCtrl.navigateForward((DetalleAppPage, {medico: "medico", productos: "result", 
+    //   visita: "visitajson", offline: "dataOff"});
   }
 
 }
